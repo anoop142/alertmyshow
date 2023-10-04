@@ -9,6 +9,12 @@ quck check
 ![poll](./docs/poll-mode.png)
 poll mode
 
+
+## Install
+```
+go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
+```
+
 ## Usage as CLI
 ```
 ./alertmyshow -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes]
