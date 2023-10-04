@@ -1,6 +1,11 @@
 # alertmyshow
 A go library and cli tool to check if  movie booking is started on Paytm.
 
+![quik check](docs/quick-check.png)
+
+
+![poll](docs/poll-mode.png)
+
 ## Usage as CLI
 ```
 ./alertmyshow -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes]
