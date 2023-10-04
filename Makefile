@@ -7,7 +7,7 @@ all: build
 
 .PHONY:	build
 build:
-	CGO_ENABLED=0 go build -o $(BIN) -ldflags $(BUILD_FLAGS) ./cmd/cli
+	CGO_ENABLED=0 go build -o $(BIN) -ldflags $(BUILD_FLAGS) ./cmd/alertmyshow
 
 .PHONY: run
 run: build
