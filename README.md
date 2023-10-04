@@ -51,7 +51,7 @@ import(
 )
 
 venues := "pvr, inox"
-movie, _ := alertmyshow.NewMovie("oppenheimer", "english", "chennai", "2d-imax", "2023-08-10")
+movie, _ := alertmyshow.NewMovie("oppenheimer", "english", "chennai", "imax 2d", "2023-08-10")
 
 bookingStarted, _ := movie.IsBookingStarted(venues)
 
