@@ -32,7 +32,11 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
     	movie title
   -v value
     	venues
+  -version
+        print version
+    
 ```
+### Note: screen type has to be one of "2d", "3d",  "imax-2d" or "imax-3d"
 
 ### Example
 ```
@@ -57,6 +61,7 @@ import(
 )
 
 venues := "pvr, inox"
+//          alertmyshow.NewMovie(title, language, city, screen_type, yyyy-mm-dd)
 movie, _ := alertmyshow.NewMovie("oppenheimer", "english", "chennai", "imax 2d", "2023-08-10")
 
 bookingStarted, _ := movie.IsBookingStarted(venues)
