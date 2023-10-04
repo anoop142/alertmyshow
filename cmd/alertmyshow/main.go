@@ -11,6 +11,10 @@ import (
 	"github.com/anoop142/alertmyshow"
 )
 
+const(
+	version = "dev"
+)
+
 func printUsage() {
 	fmt.Println("Usage:")
 	fmt.Printf("%s -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes]\n", os.Args[0])
@@ -23,6 +27,8 @@ func main() {
 	screen := flag.String("s", "", "screen type")
 	city := flag.String("c", "", "city")
 	date := flag.String("d", "", "date")
+	showVersion := flag.Bool("version", false, "version")
+	
 	var venues []string
 	flag.Func("v", "venues", func(val string)error{
 		for _, s := range strings.Split(val, ","){
@@ -36,6 +42,11 @@ func main() {
 
 	flag.Usage = printUsage
 	flag.Parse()
+
+	if *showVersion{
+		fmt.Println(version)
+		os.Exit(0)
+	}
 
 	required := []string{"t", "l", "s", "c", "d", "v"}
 	seen := make(map[string]bool)
