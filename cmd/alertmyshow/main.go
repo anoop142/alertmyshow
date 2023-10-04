@@ -11,7 +11,7 @@ import (
 	"github.com/anoop142/alertmyshow"
 )
 
-const(
+var(
 	version = "dev"
 )
 
