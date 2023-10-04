@@ -45,7 +45,7 @@ func NewMovie(title, language, city, screen, date string)(Movie, error){
 	}
 	movie.Date = date
 
-	movie.ID, err = GetMovieID(title, language, screen, city)
+	movie.ID, err = getMovieID(title, language, screen, city)
 	if err != nil{
 		return movie, fmt.Errorf("error getting movieID: %w", err)
 	}

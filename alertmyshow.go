@@ -74,7 +74,7 @@ func  extractMovieID(groupedMovies []groupedMovie, title, language, screen strin
 			
 
 
-func GetMovieID(title, language, screen, city string) (MovieID, error){
+func getMovieID(title, language, screen, city string) (MovieID, error){
 	var moviesNow MoviesNow
 	var movieID MovieID
 
