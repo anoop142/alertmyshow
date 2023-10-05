@@ -31,7 +31,7 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
   -t string
     	movie title
   -v value
-    	venues
+    	venues comma separated
   -version
         print version
     
@@ -40,7 +40,7 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
 
 ### Example
 ```
-alertmyshow  -t "oppenheimer" -l english   -s "imax 2d" -c chennai -d 2023-10-12 -v "pvr"
+alertmyshow  -t "oppenheimer" -l english   -s "imax 2d" -c chennai -d 2023-10-12 -v "pvr,luxe"
 
 ```
 
