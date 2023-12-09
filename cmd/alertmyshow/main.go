@@ -9,15 +9,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/anoop142/alertmyshow"
 )
 
-var(
+var (
 	version = "dev"
 )
 
@@ -34,22 +33,21 @@ func main() {
 	city := flag.String("c", "", "city")
 	date := flag.String("d", "", "date")
 	showVersion := flag.Bool("version", false, "version")
-	
+
 	var venues []string
-	flag.Func("v", "venues", func(val string)error{
-		for _, s := range strings.Split(val, ","){
+	flag.Func("v", "venues", func(val string) error {
+		for _, s := range strings.Split(val, ",") {
 			venues = append(venues, strings.TrimSpace(s))
 		}
 
 		return nil
 	})
-
 	poll := flag.Int("poll", 0, "poll time in minutes")
 
 	flag.Usage = printUsage
 	flag.Parse()
 
-	if *showVersion{
+	if *showVersion {
 		fmt.Println(version)
 		os.Exit(0)
 	}
@@ -66,10 +64,12 @@ func main() {
 	}
 
 	movie, err := alertmyshow.NewMovie(*title, *language, *city, *screen, *date)
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+	venuesFound := false
 
 	// poll mode
 	if *poll != 0 {
@@ -84,31 +84,49 @@ func main() {
 		}()
 
 		for {
-			bookingStarted, err := movie.IsBookingStarted(venues)
+
+			availVenues, err := movie.GetVenues()
 			if err != nil {
-				log.Println(err)
+				fmt.Fprintln(os.Stderr, err)
+				continue
 			}
-			if bookingStarted {
-				fmt.Println("\rTickets Available!         ")
-				break
+			for _, v := range availVenues {
+				// go over the supplied venues
+				for _, venue := range venues {
+					if strings.Contains(strings.ToLower(v.Name), venue) {
+						venuesFound = true
+						fmt.Println(v.Name)
+					}
+				}
 			}
+			if venuesFound {
+				os.Exit(0)
+			}
+
 			time.Sleep(time.Duration(*poll) * time.Minute)
 
 		}
 
 	} else {
-		bookingStarted, err := movie.IsBookingStarted(venues)
+		availVenues, err := movie.GetVenues()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-
-		if bookingStarted {
-			fmt.Println("Tickets Available!")
-		} else {
-			fmt.Fprintln(os.Stderr, "Tickets Not Available.")
-			os.Exit(2)
+		for _, v := range availVenues {
+			// go over the supplied venues
+			for _, venue := range venues {
+				if strings.Contains(strings.ToLower(v.Name), venue) {
+					venuesFound = true
+					fmt.Println(v.Name)
+				}
+			}
 		}
+		if !venuesFound {
+			fmt.Println("No match found!")
+			os.Exit(1)
+		}
+
 	}
 
 }

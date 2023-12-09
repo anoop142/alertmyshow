@@ -1,35 +1,35 @@
 package alertmyshow
 
-
-import(
-	"net/http"
+import (
 	"fmt"
-	"strings"
+	"net/http"
 )
 
 type searchErrorResponse struct {
-	Msg    string `json:"msg"`
+	Msg string `json:"msg"`
+}
+
+type Venue struct {
+	ID      int    `json:"id"`
+	Pid     int    `json:"pid"`
+	Name    string `json:"name"`
+	Address string `json:"address"`
 }
 
 type MovieSearchResult struct {
-	Meta       struct {
+	Meta struct {
 		Movies []struct {
-			ID         string   `json:"id"`
-			FrmtID     string   `json:"frmtId"`
-			Name       string   `json:"name"`
-			Lang      string `json:"lang"`
+			ID     string `json:"id"`
+			FrmtID string `json:"frmtId"`
+			Name   string `json:"name"`
+			Lang   string `json:"lang"`
 		} `json:"movies"`
-	Cinemas []struct {
-			ID                    int     `json:"id"`
-			Pid                   int     `json:"pid"`
-			Name                  string  `json:"name"`
-			Address               string  `json:"address"`
-	} `json:"cinemas"`
+		Venues []Venue `json:"cinemas"`
 	} `json:"meta"`
 }
 
-
-func (m Movie)IsBookingStarted(venues []string)(bool, error){
+// Get all available venue for the movie in city
+func (m Movie) GetVenues() ([]Venue, error) {
 	var searchErrorResponse searchErrorResponse
 	var movieSearchResult MovieSearchResult
 
@@ -37,57 +37,42 @@ func (m Movie)IsBookingStarted(venues []string)(bool, error){
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", u, nil)
-	if err != nil{
-		return false, fmt.Errorf("error: unable to create request: %v", err)
+	if err != nil {
+		return nil, fmt.Errorf("error: unable to create request: %v", err)
 	}
 
 	resp, err := client.Do(req)
-	if err != nil{
-		return false, err
+	if err != nil {
+		return nil, err
 	}
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusNoContent{
-		return false, nil
+	if resp.StatusCode == http.StatusNoContent {
+		return nil, fmt.Errorf("error: empty response")
 	}
 
-	if resp.StatusCode == http.StatusBadRequest{
-		if err:= readJSON(resp.Body, &searchErrorResponse); err != nil{
-			return false, fmt.Errorf("error decoding search error: %v", err)
+	if resp.StatusCode == http.StatusBadRequest {
+		if err := readJSON(resp.Body, &searchErrorResponse); err != nil {
+			return nil, fmt.Errorf("error decoding search: %v", err)
 		}
-		return false, fmt.Errorf("search error: %s", searchErrorResponse.Msg)
+		return nil, fmt.Errorf("search error: %s", searchErrorResponse.Msg)
 	}
 
-	if resp.StatusCode == http.StatusOK{
-		if err:= readJSON(resp.Body, &movieSearchResult); err!= nil{
-			return false, fmt.Errorf("error parsing search result: %v", err)
+	if resp.StatusCode == http.StatusOK {
+		if err := readJSON(resp.Body, &movieSearchResult); err != nil {
+			return nil, fmt.Errorf("error parsing search result: %v", err)
 		}
 
-		for _,movie:= range movieSearchResult.Meta.Movies{
-			if movie.ID == m.ID.Code{
-				// check for venue, string contains match
-				for _, cinema := range movieSearchResult.Meta.Cinemas{
-					for _,venue := range venues{
-						if strings.Contains(strings.ToLower(cinema.Name), venue){
-							return true, nil
-						}
-					}
-				}
-				break
+		for _, movie := range movieSearchResult.Meta.Movies {
+			if movie.ID == m.ID.Code {
+				return movieSearchResult.Meta.Venues, nil
 			}
 
 		}
-		return false, nil
+		return nil, fmt.Errorf("error: no venues found!")
 	}
 
-	return false, fmt.Errorf("unknown search error: status Code: %d", resp.StatusCode)
+	return nil, fmt.Errorf("unknown search error: status Code: %d", resp.StatusCode)
 
 }
-
-
-
-
-
-
-
