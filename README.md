@@ -39,7 +39,7 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
     
 ```
 
-### List all theatres availablr for booking
+### List all theatres available for booking
 ```
 alertmyshow  -t "oppenheimer" -list -l english   -s "imax 2d" -c chennai -d 2023-10-12
 
@@ -88,7 +88,7 @@ you whether booking is started or not.
 For example you could use a script to push alert to your telegram channel using a bot.
 
 ### Example script to push messages to telegram channel using a bot.
-```
+```bash
 #! /bin/bash
 set -e
 
