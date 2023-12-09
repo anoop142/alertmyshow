@@ -17,7 +17,7 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
 
 ## Usage as CLI
 ```
-./alertmyshow -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes]
+./alertmyshow -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes] [-list]
   -c string
     	city
   -d string
@@ -26,6 +26,8 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
     	movie language
   -poll int
     	poll time in minutes
+  -list bool
+    	list venues
   -s string
     	screen type ("2d" | "3d" | "imax-2d" | "imax-3d" )
   -t string
@@ -36,9 +38,17 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
         print version
     
 ```
+
+### List all theatres availablr for booking
+```
+alertmyshow  -t "oppenheimer" -list -l english   -s "imax 2d" -c chennai -d 2023-10-12
+
+```
+
+
 ### Note: screen type has to be one of "2d", "3d",  "imax-2d" or "imax-3d"
 
-### Example
+### Check if booking started
 ```
 alertmyshow  -t "oppenheimer" -l english   -s "imax 2d" -c chennai -d 2023-10-12 -v "pvr,luxe"
 
@@ -52,7 +62,7 @@ alertmyshow -poll 30 -t "oppenheimer" -l english   -s "imax 2d" -c chennai -d 20
 ```
 
 ## Usage as Library
-```
+```go
 package main
 
 import(
@@ -64,11 +74,10 @@ venues := "pvr, inox"
 //          alertmyshow.NewMovie(title, language, city, screen_type, yyyy-mm-dd)
 movie, _ := alertmyshow.NewMovie("oppenheimer", "english", "chennai", "imax 2d", "2023-08-10")
 
-bookingStarted, _ := movie.IsBookingStarted(venues)
-
-if bookingStarted{
-    fmt.Println("Tickets available!")
-}
+venues, _ := movie.GetVenues()
+for _, v := range venues{
+    fmt.Println(v.Name)
+    }
 
 ```
 ### How do I get alerts?
