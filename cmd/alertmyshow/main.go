@@ -22,7 +22,7 @@ var (
 
 func printUsage() {
 	fmt.Println("Usage:")
-	fmt.Printf("%s -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes]\n", os.Args[0])
+	fmt.Printf("%s -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes] [-list]\n", os.Args[0])
 	flag.PrintDefaults()
 }
 
@@ -33,6 +33,7 @@ func main() {
 	city := flag.String("c", "", "city")
 	date := flag.String("d", "", "date")
 	showVersion := flag.Bool("version", false, "version")
+	list := flag.Bool("list", false, "list venues")
 
 	var venues []string
 	flag.Func("v", "venues", func(val string) error {
@@ -105,6 +106,16 @@ func main() {
 
 			time.Sleep(time.Duration(*poll) * time.Minute)
 
+		}
+
+	} else if *list {
+		availVenues, err := movie.GetVenues()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		for _, v := range availVenues {
+			fmt.Println(v.Name)
 		}
 
 	} else {
