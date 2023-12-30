@@ -22,7 +22,7 @@ var (
 
 func printUsage() {
 	fmt.Println("Usage:")
-	fmt.Printf("%s -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes] [-list]\n", os.Args[0])
+	fmt.Printf("%s -t title -l language -screen screen_type -d yyyy-mm-dd -list | -v theatres(comma separated) -c city [-poll poll_in_minutes]\n", os.Args[0])
 	flag.PrintDefaults()
 }
 
@@ -53,7 +53,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	required := []string{"t", "l", "s", "c", "d", "v"}
+	required := []string{"t", "l", "s", "c", "d"}
 	seen := make(map[string]bool)
 	flag.Visit(func(f *flag.Flag) { seen[f.Name] = true })
 	for _, req := range required {
