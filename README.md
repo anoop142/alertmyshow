@@ -17,7 +17,7 @@ go install github.com/anoop142/alertmyshow/cmd/alertmyshow@latest
 
 ## Usage as CLI
 ```
-./alertmyshow -t title -l language -screen screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes] [-list]
+./alertmyshow -t title -l language -s screen_type -d yyyy-mm-dd -v theatres(comma separated) -c city [-poll poll_in_minutes] [-list]
   -c string
     	city
   -d string
